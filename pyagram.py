@@ -119,13 +119,9 @@ def generate(in_file, image_type, src):
 
     command1 = 'dot -T' + image_type + ' -o ' + out_file + ' ' + dot_file
     os.system(command1)
-    #args1 = shlex.split(command1)
-    #subprocess.Popen(args1)
 
     command2 = 'rm -f ' + dot_file
     os.system(command2)
-    #args2 = shlex.split(command2)
-    #subprocess.Popen(args2)
 
 def compile(in_file, image_type):
     f_in = open(in_file, 'r')
