@@ -1,0 +1,115 @@
+@[title]
+User Registration
+
+
+#[Top]
+/
+
+--> Register User
+
+Click register user button
+==> GET /user/register 
+
+
+$[GET /user/register]
+==> Register User
+
+
+#[Register User]
+/user/register
+
+--> Confirm User
+
+Click submit button
+==> POST /user/confirm
+
+
+$[POST /user/confirm]
+==> Validate Inputted User
+
+
+$[Validate Inputted User]
+Valid
+==> Set Inputted User on Session
+
+Invalid
+==> Register User
+
+$[Set Inputted User on Session]
+==> Confirm User
+
+#[Confirm User]
+/user/confirm
+
+--> Sent Activation Email
+
+Click submit button
+==> GET /user/sent_activation_email
+
+
+$[GET /user/sent_activation_email]
+==> Restore Inputted User from Session
+
+
+$[Restore Inputted User from Session]
+==> Generate Activation Code
+
+
+$[Generate Activation Code]
+==> Save User
+
+
+$[Save User]
+Success
+==> Sent Activation Email
+
+Database Error
+==> Server Error
+
+
+#[Sent Activation Email]
+/user/sent_activation_email
+
+--> Receive Activation Email on Your Email App
+
+
+#[Receive Activation Email on Your Email App]
+
+--> User Activated
+
+--> Activation Code Expired
+
+Click activation link
+==> GET /user/activated
+
+
+$[GET /user/activated]
+==> Validate Activation Code
+
+
+$[Validate Activation Code]
+Valid
+==> Save as Activated
+
+Invalid
+==> Activation Code Expired
+
+
+$[Save as Activated]
+Success
+==> User Activated
+
+Database Error
+==> Server Error 
+
+
+#[User Activated]
+/user/activated
+
+
+#[Activation Code Expired]
+/user/activation_code_expired
+
+
+#[Server Error]
+/system/server_error
