@@ -1,6 +1,5 @@
 import sys
 import re
-import pprint
 import pyparsing as pp
 
 def lexical_analysis(src):
@@ -36,15 +35,13 @@ def syntactic_analysis(src):
     count = 0
     d = {'graph': {}, 'views': {}, 'processes': {}}
     for elem in src:
-        #print(elem)
-        #print(prev)
         if elem[0] == '@' and elem[1] == '[' and elem[3] == ']':
             d['graph'][elem[2]] = ''
             prev = elem
 
         elif elem[0] == '#' and elem[1] == '[' and elem[3] == ']':
             d['views'][elem[2]] = {}
-            d['views'][elem[2]]['path'] = {}
+            d['views'][elem[2]]['path'] = ''
             d['views'][elem[2]]['next_view'] = {}
             d['views'][elem[2]]['next_processes'] = {}
             d['views'][elem[2]]['next_processes']['action'] = {}
@@ -62,42 +59,70 @@ def syntactic_analysis(src):
             count = 0
 
         elif prev and prev[0] == '@':
-            d['graph'][prev[2]] = elem[0]
+            d['graph'][prev[2]] = elem[0].strip()
 
         elif prev and prev[0] == '#' and elem[0] != '-->' and elem[0].startswith('/'):
             d['views'][prev[2]]['path'] = elem[0]
 
         elif prev and prev[0] == '#' and elem[0] == '-->':
-            d['views'][prev[2]]['next_view'][next_view_count] = elem[1]
+            d['views'][prev[2]]['next_view'][next_view_count] = elem[1].strip()
             next_view_count = next_view_count + 1
 
         elif prev and prev[0] == '#' and elem[0] != '==>':
-            d['views'][prev[2]]['next_processes']['action'][count] = elem[0]
+            d['views'][prev[2]]['next_processes']['action'][count] = elem[0].strip()
 
         elif prev and prev[0] == '#' and elem[0] == '==>':
-            d['views'][prev[2]]['next_processes']['process'][count] = elem[1]
+            d['views'][prev[2]]['next_processes']['process'][count] = elem[1].strip()
             count = count + 1
 
         elif prev and prev[0] == '$' and elem[0] != '==>':
-            d['processes'][prev[2]]['next_processes']['action'][count] = elem[0]
+            d['processes'][prev[2]]['next_processes']['action'][count] = elem[0].strip()
 
         elif prev and prev[0] == '$' and elem[0] == '==>':
-            d['processes'][prev[2]]['next_processes']['process'][count] = elem[1]
+            d['processes'][prev[2]]['next_processes']['process'][count] = elem[1].strip()
             count = count + 1
 
     return d
 
-def compile(filename):
-    f = open(filename, 'r')
+def generate(original_filename, src):
+    f_out = open(original_filename.replace('.txt', '.dot'), 'w')
+    f_out.write('digraph sample {')
+    f_out.write('graph [label="' + src['graph']['title'] + '",labelloc=t,fontsize=18];')
+    for key, value in src['views'].items():
+        f_out.write('"' + key + '"' + '[peripheries=2,label="' + key + ' ' + value['path'] + '"];')
+    for key, value in src['views'].items():
+        if 0 in value['next_view']:
+            f_out.write('"' + key + '"' + '->' + '"' + value['next_view'][0] + '"' + '[style=dashed];')
+    for key, value in src['processes'].items():
+        f_out.write('"' + key + '"' + '[style=filled];')
+    for key, value in src['views'].items():
+        for key2, value2 in value.items():
+            if key2 != 'path' and key2 != 'next_view':
+                for key3, value3 in value2['process'].items():
+                    if key3 in value2['action']:
+                        f_out.write('"' + key + '"' + '->' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];')
+                    else:
+                        f_out.write('"' + key + '"' + '->' + '"' + value3 + '";')
+    for key, value in src['processes'].items():
+        for key2, value2 in value.items():
+            for key3, value3 in value2['process'].items():
+                if key3 in value2['action']:
+                    f_out.write('"' + key + '"' + '->' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];')
+                else:
+                    f_out.write('"' + key + '"' + '->' + '"' + value3 + '";')
+    f_out.write('}')
+    f_out.flush()
+
+def compile(original_filename):
+    f_in = open(original_filename, 'r')
     src = []
-    for line in f.readlines():
+    for line in f_in.readlines():
         l = line.replace('\n','')
         if len(l) != 0:
             res1 = lexical_analysis(l)
             src.append(res1)
-    #print(src)
     res2 = syntactic_analysis(src)
-    pprint.pprint(res2)
+    generate(original_filename, res2)
 
 if __name__ == '__main__':
     compile(sys.argv[1])
