@@ -1,8 +1,7 @@
 import sys
 import re
 from argparse import ArgumentParser
-import shlex
-import subprocess
+import os
 import pyparsing as pp
 
 def lexical_analysis(src):
@@ -117,25 +116,33 @@ def generate(in_file, image_type, src):
                     f_out.write('"' + key + '"' + '->' + '"' + value3 + '";')
     f_out.write('}')
     f_out.flush()
-    command = 'dot -T' + image_type + ' -o ' + out_file + ' ' + dot_file
-    args = shlex.split(command)
-    subprocess.Popen(args)
 
+    command1 = 'dot -T' + image_type + ' -o ' + out_file + ' ' + dot_file
+    os.system(command1)
+    #args1 = shlex.split(command1)
+    #subprocess.Popen(args1)
+
+    command2 = 'rm -f ' + dot_file
+    os.system(command2)
+    #args2 = shlex.split(command2)
+    #subprocess.Popen(args2)
 
 def compile(in_file, image_type):
     f_in = open(in_file, 'r')
-    src = []
+    lines = []
     for line in f_in.readlines():
-        l = line.replace('\n','')
-        if len(l) != 0:
-            res1 = lexical_analysis(l)
-            src.append(res1)
-    res2 = syntactic_analysis(src)
-    generate(in_file, image_type, res2)
+        replaced_line = line.replace('\n','')
+        if len(replaced_line) != 0:
+            result1 = lexical_analysis(replaced_line)
+            lines.append(result1)
+    result2 = syntactic_analysis(lines)
+    generate(in_file, image_type, result2)
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='Pyagram: Diagram generator')
-    parser.add_argument('-I', '--input', help='Input image filename', metavar='input')
-    parser.add_argument('-T', '--type', help='Output image type', metavar='output_image_type')
+    parser.add_argument('-I', '--input', help='Input image filename')
+    parser.add_argument('-T', '--imagetype', help='Output image type')
     _args = parser.parse_args()
-    compile(_args.input, _args.type)
+    if not _args.imagetype in ['gif', 'png', 'svg']:
+        raise ValueError('Output image type must be gif, png or svg.')
+    compile(_args.input, _args.imagetype)
