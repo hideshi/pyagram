@@ -1,5 +1,8 @@
 import sys
 import re
+from argparse import ArgumentParser
+import shlex
+import subprocess
 import pyparsing as pp
 
 def lexical_analysis(src):
@@ -84,8 +87,10 @@ def syntactic_analysis(src):
 
     return d
 
-def generate(original_filename, src):
-    f_out = open(original_filename.replace('.txt', '.dot'), 'w')
+def generate(in_file, image_type, src):
+    dot_file = in_file.replace('.txt', '.dot')
+    out_file = in_file.replace('.txt', '.' + image_type)
+    f_out = open(dot_file, 'w')
     f_out.write('digraph sample {')
     f_out.write('graph [label="' + src['graph']['title'] + '",labelloc=t,fontsize=18];')
     for key, value in src['views'].items():
@@ -112,9 +117,13 @@ def generate(original_filename, src):
                     f_out.write('"' + key + '"' + '->' + '"' + value3 + '";')
     f_out.write('}')
     f_out.flush()
+    command = 'dot -T' + image_type + ' -o ' + out_file + ' ' + dot_file
+    args = shlex.split(command)
+    subprocess.Popen(args)
 
-def compile(original_filename):
-    f_in = open(original_filename, 'r')
+
+def compile(in_file, image_type):
+    f_in = open(in_file, 'r')
     src = []
     for line in f_in.readlines():
         l = line.replace('\n','')
@@ -122,7 +131,11 @@ def compile(original_filename):
             res1 = lexical_analysis(l)
             src.append(res1)
     res2 = syntactic_analysis(src)
-    generate(original_filename, res2)
+    generate(in_file, image_type, res2)
 
 if __name__ == '__main__':
-    compile(sys.argv[1])
+    parser = ArgumentParser(description='Pyagram: Diagram generator')
+    parser.add_argument('-I', '--input', help='Input image filename', metavar='input')
+    parser.add_argument('-T', '--type', help='Output image type', metavar='output_image_type')
+    _args = parser.parse_args()
+    compile(_args.input, _args.type)
