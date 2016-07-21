@@ -4,6 +4,7 @@ setup(
     name = 'pyagram',
     version = '1.0.4',
     description = 'Pyagram: Python Finite State Machine Diagram Generator',
+    license = 'MIT License',
     author = 'Hideshi Ogoshi',
     author_email = 'hideshi.ogoshi@gmail.com',
     url = 'https://github.com/hideshi',
