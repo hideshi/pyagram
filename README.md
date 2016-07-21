@@ -11,7 +11,7 @@ The source file is written in a specific format, which enables us to write a cod
 
 Since graphviz provides 3 kinds of image formats, such as gif, png and svg, Pyagram provides these kinds of file format as well.  
 
-This is an example of the diagram.  
+This is an example of the diagrams.  
 
 ![alt tag](example/crud.gif)
 
