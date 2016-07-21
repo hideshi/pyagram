@@ -1,4 +1,8 @@
 from setuptools import setup
+import os
+
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
     name = 'pyagram',
@@ -9,8 +13,9 @@ setup(
     author_email = 'hideshi.ogoshi@gmail.com',
     url = 'https://github.com/hideshi',
     bugtrack_url = 'https://github.com/hideshi/pyagram/issues',
+    long_description = read('README.md'),
     packages = ['pyagram'],
-    install_requires=[
+    install_requires = [
         'pyparsing',
     ],
     entry_points = {

@@ -37,9 +37,13 @@ Firstly you can define a title of the diagram with @ sign.
     
 
 Next you can define views with # sign and its screen transitions with --> sign.  
+
 Now we have 3 views, such as List View, Add View and Server Error View.  
+
 List View and Add View are connected one another.  
+
 You can define its own path below the view name as well.  
+
 I highly recommend you to define those views first, since that would help you when you are trying to define server processes as a guide.  
     
 
@@ -59,7 +63,9 @@ I highly recommend you to define those views first, since that would help you wh
 
 
 Then you can define server processes with ==> sign connecting source process and destination process.  
+
 As you can see, process is able to have multiple flows. Each flow has its own destination.  
+
 You can add results of the processes, such as Valid, Invalid, Success, Database Error and so on. It will be used as labels placed beside the straight arrows.  
 
 
@@ -120,6 +126,7 @@ How to install
 --------------
 
 pip3 command installs depending library, such as pyparsing automatically.  
+
 After the installation, executable pyagram command will be placed in a bin directory, such as /usr/local/bin/pyagram.  
 
 
@@ -132,6 +139,7 @@ How to execute
 pyagram command accepts 2 kinds of options.  
 
 T option represents image type, which accepts gif, png and svg.  
+
 I option represents source file, which accepts text file.  
 
 Output file is placed in the same place as the source file.  
