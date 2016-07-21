@@ -1,0 +1,112 @@
+@[title]
+CRUD View Diagram
+
+
+#[List View]
+/index
+
+--> Add View
+
+Click add button
+==> GET /add
+
+--> Edit View
+
+Click edit button
+==> GET /edit
+
+Click delete button
+==> Show Confirm
+
+
+#[Show Confirm]
+Click OK
+==> POST /delete
+
+Click Cancel
+==> List View
+
+
+$[GET /index]
+==> List View
+
+
+$[GET /add]
+==> Add View
+
+
+$[GET /edit]
+==> Edit View
+
+
+#[Add View]
+/add
+
+--> List View
+
+--> Add View
+
+Click back button
+==> GET /index
+
+Click submit button
+==> POST /add
+
+
+$[POST /add]
+==> Validate
+
+
+$[Validate]
+Valid
+==> Save
+
+Invalid
+==> Add View
+
+Invalid
+==> Edit View
+
+Invalid
+==> Delete View
+
+
+$[Save]
+==> Add View
+
+
+#[Edit View]
+/edit
+
+--> List View
+
+--> Edit View
+
+Click back button
+==> GET /index
+
+Click submit button
+==> POST /edit
+
+
+$[POST /edit]
+==> Validate
+
+
+$[Save]
+==> Edit View
+
+
+$[POST /delete]
+==> Save
+
+
+$[Save]
+Success
+==> List View
+
+Database error
+==> Server Error
+
+
+#[Server Error]
