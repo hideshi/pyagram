@@ -1,21 +1,21 @@
 Pyagram
 =======
 
-Python Finite State Machine Diagram Generator
+Python Finite State Machine Diagram Generator  
 
-This is a command line tool, which generates finite state machine diagram for web and mobile application development from a source file through graphviz.
+This is a command line tool, which generates finite state machine diagram for web and mobile application development from a source file through graphviz.  
 
-The finite state machine diagram is a kind of diagram, which describes screen transitions and flows of the processes.
+The finite state machine diagram is a kind of diagram, which describes screen transitions and flows of the processes.  
 
-The source file is written in a specific format, which enables us to write a code easier than using only graphviz, since Pyagram generates graphviz code as an intermediate file.
+The source file is written in a specific format, which enables us to write a code easier than using only graphviz, since Pyagram generates graphviz code as an intermediate file.  
 
-Since graphviz provides 3 kinds of image formats, such as gif, png and svg, Pyagram provides these kinds of file format as well.
+Since graphviz provides 3 kinds of image formats, such as gif, png and svg, Pyagram provides these kinds of file format as well.  
 
-This is an example of the diagram.
+This is an example of the diagram.  
 
-.. image:: example/crud.gif
+![alt tag](example/crud.gif)
 
-As you can see, there are several kinds of objects in the diagram.
+As you can see, there are several kinds of objects in the diagram.  
 
 
 * Title of a diagram
@@ -29,20 +29,20 @@ As you can see, there are several kinds of objects in the diagram.
 How to write source file
 ------------------------
 
-Firstly you can define a title of the diagram with @ sign.
-::
+Firstly you can define a title of the diagram with @ sign.  
     
+
     @[title]
     CRUD View Diagram
     
 
-Next you can define views with # sign and its screen transitions with --> sign.
-Now we have 3 views, such as List View, Add View and Server Error View.
-List View and Add View are connected one another.
-You can define its own path below the view name as well.
-I highly recommend you to define those views first, since that would help you when you are trying to define server processes as a guide.
-::
+Next you can define views with # sign and its screen transitions with --> sign.  
+Now we have 3 views, such as List View, Add View and Server Error View.  
+List View and Add View are connected one another.  
+You can define its own path below the view name as well.  
+I highly recommend you to define those views first, since that would help you when you are trying to define server processes as a guide.  
     
+
     #[List View]
     /index
     
@@ -58,10 +58,10 @@ I highly recommend you to define those views first, since that would help you wh
     #[Server Error]
 
 
-Then you can define server processes with ==> sign connecting source process and destination process.
-As you can see, process is able to have multiple flows. Each flow has its own destination.
-You can add results of the processes, such as Valid, Invalid, Success, Database Error and so on. It will be used as labels placed beside the straight arrows.
-::
+Then you can define server processes with ==> sign connecting source process and destination process.  
+As you can see, process is able to have multiple flows. Each flow has its own destination.  
+You can add results of the processes, such as Valid, Invalid, Success, Database Error and so on. It will be used as labels placed beside the straight arrows.  
+
 
     $[GET /index]
     ==> List View
@@ -90,8 +90,8 @@ You can add results of the processes, such as Valid, Invalid, Success, Database 
     ==> Server Error
     
     
-Now that you can define the flows between the views and the processes with ==> sign.
-::
+Now that you can define the flows between the views and the processes with ==> sign.  
+
 
     #[List View]
     /index
@@ -119,9 +119,9 @@ Now that you can define the flows between the views and the processes with ==> s
 How to install
 --------------
 
-pip3 command installs depending library, such as pyparsing automatically.
-After the installation, executable pyagram command will be placed in a bin directory, such as /usr/local/bin/pyagram.
-::
+pip3 command installs depending library, such as pyparsing automatically.  
+After the installation, executable pyagram command will be placed in a bin directory, such as /usr/local/bin/pyagram.  
+
 
     pip3 install pyagram
 
@@ -129,13 +129,13 @@ After the installation, executable pyagram command will be placed in a bin direc
 How to execute
 --------------
 
-pyagram command accepts 2 kinds of options.
+pyagram command accepts 2 kinds of options.  
 
-T option represents image type, which accepts gif, png and svg.
-I option represents source file, which accepts text file.
+T option represents image type, which accepts gif, png and svg.  
+I option represents source file, which accepts text file.  
 
-Output file is placed in the same place as the source file.
-::
+Output file is placed in the same place as the source file.  
+
 
     pyagram -T {image type} -I {source file}
 
