@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 import re
 from argparse import ArgumentParser
@@ -134,7 +136,7 @@ def compile(in_file, image_type):
     result2 = syntactic_analysis(lines)
     generate(in_file, image_type, result2)
 
-if __name__ == '__main__':
+def main():
     parser = ArgumentParser(description='Pyagram: Diagram generator')
     parser.add_argument('-I', '--input', help='Input image filename')
     parser.add_argument('-T', '--imagetype', help='Output image type')
@@ -142,3 +144,6 @@ if __name__ == '__main__':
     if not _args.imagetype in ['gif', 'png', 'svg']:
         raise ValueError('Output image type must be gif, png or svg.')
     compile(_args.input, _args.imagetype)
+
+if __name__ == '__main__':
+    main()
