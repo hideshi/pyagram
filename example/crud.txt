@@ -68,7 +68,7 @@ Invalid
 ==> Edit View
 
 Invalid
-==> Delete View
+==> List View
 
 
 $[Save]
