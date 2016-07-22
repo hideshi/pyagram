@@ -20,14 +20,13 @@ setup(
     entry_points = {
         'console_scripts': ['pyagram = pyagram.pyagram:main']
     },
-    platforms = ['MacOS', 'Linux'],
+    platforms = ['MacOS'],
     classifiers = [
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Intended Audience :: Information Technology',
         'License :: OSI Approved :: MIT License',
         'Operating System :: MacOS :: MacOS X',
-        'Operating System :: POSIX :: Linux',
         'Programming Language :: Python :: 3.5',
         'Topic :: Documentation',
         'Topic :: Software Development :: Code Generators',
