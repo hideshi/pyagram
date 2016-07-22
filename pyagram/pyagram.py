@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import re
@@ -7,7 +7,7 @@ import os
 import pyparsing as pp
 
 def lexical_analysis(src):
-    string = pp.Word(pp.alphanums + '_' + '/' + ' ')
+    string = pp.Regex('[a-zA-Z0-9_/ ａ-ｚＡ-Ｚぁ-ゔゞァ-・ヽヾ゛゜ー一-龯]+')
 
     blank = pp.LineStart() + pp.LineEnd()
 
@@ -37,7 +37,7 @@ def syntactic_analysis(src):
     prev = False
     next_view_count = 0
     count = 0
-    d = {'graph': {}, 'views': {}, 'processes': {}}
+    d = {'graph': {'title': ''}, 'views': {}, 'processes': {}}
     for elem in src:
         if elem[0] == '@' and elem[1] == '[' and elem[3] == ']':
             d['graph'][elem[2]] = ''
@@ -129,7 +129,7 @@ def compile(in_file, image_type):
     f_in = open(in_file, 'r')
     lines = []
     for line in f_in.readlines():
-        replaced_line = line.replace('\n','')
+        replaced_line = str(line.replace('\n',''))
         if len(replaced_line) != 0:
             result1 = lexical_analysis(replaced_line)
             lines.append(result1)

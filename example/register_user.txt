@@ -61,10 +61,18 @@ $[Generate Activation Code]
 
 $[Save User]
 Success
-==> Sent Activation Email
+==> Send Activation Email
 
 Database Error
 ==> Server Error
+
+
+$[Send Activation Email]
+Success
+==> Sent Activation Email
+
+Error and retry
+==> Send Activation Email
 
 
 #[Sent Activation Email]
