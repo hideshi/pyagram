@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import sys
-import re
 from argparse import ArgumentParser
 import os
 import pyparsing as pp
