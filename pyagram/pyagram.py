@@ -4,6 +4,7 @@ import sys
 from argparse import ArgumentParser
 import os
 import pyparsing as pp
+import hashlib
 
 def lexical_analysis(src):
     string = pp.Regex('[a-zA-Z0-9_/ ａ-ｚＡ-Ｚぁ-ゔゞァ-・ヽヾ゛゜ー一-龯]+')
@@ -88,7 +89,7 @@ def syntactic_analysis(src):
     return d
 
 def generate(in_file, image_type, src):
-    dot_file = in_file.replace('.txt', '.dot')
+    dot_file = hashlib.md5().hexdigest()
     out_file = in_file.replace('.txt', '.' + image_type)
     f_out = open(dot_file, 'w')
     f_out.write('digraph sample {')
