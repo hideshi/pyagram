@@ -6,7 +6,7 @@ def read(fname):
 
 setup(
     name = 'pyagram',
-    version = '1.1.2',
+    version = '1.1.3',
     description = 'Pyagram: Python Finite State Machine Diagram Generator',
     license = 'MIT License',
     author = 'Hideshi Ogoshi',
@@ -176,7 +176,7 @@ I option represents source file, which accepts text file.
 Output file is placed in the same place as the source file.  
 
 
-    pyagram -T {image type} -I {source file}
+    pyagram -t {image type} -f {source file}
 
     
     ''',

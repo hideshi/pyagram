@@ -138,8 +138,8 @@ def compile(in_file, image_type):
 
 def main():
     parser = ArgumentParser(description='Pyagram: Diagram generator')
-    parser.add_argument('-I', '--input', help='Input image filename')
-    parser.add_argument('-T', '--imagetype', help='Output image type')
+    parser.add_argument('-f', '--input', help='Input filename')
+    parser.add_argument('-t', '--imagetype', help='Output image type')
     _args = parser.parse_args()
     if not _args.imagetype in ['gif', 'png', 'svg']:
         raise ValueError('Output image type must be gif, png or svg.')
