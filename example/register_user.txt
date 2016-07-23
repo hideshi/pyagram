@@ -18,6 +18,12 @@ $[GET /user/register]
 #[Register User]
 /user/register
 
+--- form1
+| email ! email
+| password ! password
+| submit
+---
+
 --> Confirm User
 
 Click submit button

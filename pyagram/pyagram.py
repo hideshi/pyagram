@@ -5,9 +5,11 @@ from argparse import ArgumentParser
 import os
 import pyparsing as pp
 import hashlib
+import pprint
 
 def lexical_analysis(src):
-    string = pp.Regex('[a-zA-Z0-9_/ ａ-ｚＡ-Ｚぁ-ゔゞァ-・ヽヾ゛゜ー一-龯]+')
+    pprint.pprint(src)
+    string = pp.Regex('[a-zA-Z0-9_/! ａ-ｚＡ-Ｚぁ-ゔゞァ-・ヽヾ゛゜ー一-龯]+')
 
     blank = pp.LineStart() + pp.LineEnd()
 
@@ -23,20 +25,28 @@ def lexical_analysis(src):
     process_tag = pp.LineStart() + '$'
     process = process_tag + start + string + end
 
-    view_transition_operator = pp.LineStart() + '-->'
-    view_transition = view_transition_operator + string
+    view_transition_identifier = pp.LineStart() + '-->'
+    view_transition = view_transition_identifier + string
 
-    process_transition_operator = pp.LineStart() + '==>'
-    process_transition = process_transition_operator + string
+    process_transition_identifier = pp.LineStart() + '==>'
+    process_transition = process_transition_identifier + string
 
-    state_machine = pp.OneOrMore(graph | view | process | view_transition | process_transition | string | blank)
+    form_identifier = pp.LineStart() + '---'
+    form = form_identifier + string
+
+    form_input_identifier = pp.LineStart() + '|'
+    form_input = form_input_identifier + string
+
+    state_machine = pp.OneOrMore(graph | view | process | view_transition | process_transition | form_identifier | form | form_input | string | blank)
 
     return state_machine.parseString(src)
 
 def syntactic_analysis(src):
     prev = False
+    in_form = False
     next_view_count = 0
     count = 0
+    input_count = 0
     d = {'graph': {'title': ''}, 'views': {}, 'processes': {}}
     for elem in src:
         if elem[0] == '@' and elem[1] == '[' and elem[3] == ']':
@@ -47,6 +57,7 @@ def syntactic_analysis(src):
             d['views'][elem[2]] = {}
             d['views'][elem[2]]['path'] = ''
             d['views'][elem[2]]['next_view'] = {}
+            d['views'][elem[2]]['forms'] = {}
             d['views'][elem[2]]['next_processes'] = {}
             d['views'][elem[2]]['next_processes']['action'] = {}
             d['views'][elem[2]]['next_processes']['process'] = {}
@@ -78,6 +89,21 @@ def syntactic_analysis(src):
         elif prev and prev[0] == '#' and elem[0] == '==>':
             d['views'][prev[2]]['next_processes']['process'][count] = elem[1].strip()
             count = count + 1
+
+        elif prev and prev[0] == '#' and elem[0] == '---' and not in_form:
+            d['views'][prev[2]]['forms']['name'] = elem[1].strip()
+            d['views'][prev[2]]['forms']['name']['inputs'] = {}
+            in_form = True
+
+        elif prev and prev[0] == '#' and elem[0] != '---' and in_form:
+            d['views'][prev[2]]['forms']['name']['inputs'][input_count]['name'] = elem[1]
+            if elem[1] != 'submit':
+                d['views'][prev[2]]['forms']['name']['inputs'][input_count]['validation'] = []
+                for e in elem[2:-1]:
+                    d['views'][prev[2]]['forms']['name']['inputs'][input_count]['validation'].append(e)
+
+        elif prev and prev[0] == '#' and elem[0] == '---' and in_form:
+            in_form = False
 
         elif prev and prev[0] == '$' and elem[0] != '==>':
             d['processes'][prev[2]]['next_processes']['action'][count] = elem[0].strip()
@@ -132,8 +158,10 @@ def compile(in_file, image_type):
         replaced_line = str(line.replace('\n',''))
         if len(replaced_line) != 0:
             result1 = lexical_analysis(replaced_line)
+            print(result1)
             lines.append(result1)
     result2 = syntactic_analysis(lines)
+    pprint.pprint(result2)
     generate(in_file, image_type, result2)
 
 def main():
