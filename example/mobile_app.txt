@@ -1,0 +1,188 @@
+@[title]
+スマホアプリの画面遷移図の例
+
+
+#[ログイン]
+/
+
+--> 記事一覧
+
+ログインボタンをクリック
+==> UserFactory.login
+
+
+#[記事一覧]
+/news
+
+--> サイドメニュー
+
+--> 記事詳細
+
+自動取得
+==> NewsFactory.list
+
+記事をクリック
+==> NewsDetailController.show
+
+
+#[記事詳細]
+/news/detail
+
+--> 記事一覧
+
+お気に入りボタンをクリック
+==> DatabaseFactory.saveFavorite
+
+外部リンクをクリック
+==> Webブラウザを起動
+
+
+#[サイドメニュー]
+/menu
+
+--> アカウント情報
+
+アカウント情報をクリック
+==> DatabaseFactory.getAccount
+
+
+#[アカウント情報]
+/account
+
+--> 記事一覧
+
+保存ボタンをクリック
+==> DatabaseFactory.saveUser
+
+
+%[UserFactory.login]
+
+==> POST /api/v1/users/login
+
+{200}認証成功
+==> 記事一覧
+
+{401}認証失敗
+==> ログイン
+
+
+%[NewsFactory.list]
+
+==> GET /api/v1/news
+
+{200}取得成功
+==> DatabaseFactory.saveNews
+
+{500}サーバエラーのアラート表示
+==> 記事一覧
+
+
+%[DatabaseFactory.saveNews]
+
+保存失敗時はアラート表示
+==> 記事一覧
+
+
+%[NewsDetailController.show]
+
+==> Google Analyticsへアクセスログを送信
+
+==> NewsFactory.detail
+
+
+%[NewsFactory.detail]
+
+==> GET /api/v1/news/:news_id
+
+{200}取得成功
+==> DatabaseFactory.saveNewsDetail
+
+{500}サーバエラーのアラート表示
+==> 記事詳細
+
+
+%[DatabaseFactory.saveNewsDetail]
+
+保存失敗時はアラート表示
+==> 記事詳細
+
+
+%[DatabaseFactory.saveFavorite]
+
+保存失敗時はアラート表示
+==> 記事詳細
+
+
+%[DatabaseFactory.getAccount]
+
+取得失敗時はアラート表示
+==> アカウント情報
+
+
+%[DatabaseFactory.saveUser]
+
+成功かつ通信可能
+==> AccountFactory.update
+
+保存失敗時はアラート表示
+==> アカウント情報
+
+
+%[AccountFactory.update]
+
+==> PUT /api/v1/users/:user_id
+
+{200}保存成功
+==> アカウント情報
+
+{500}サーバエラーのアラート表示
+==> アカウント情報
+
+
+$[POST /api/v1/users/login]
+
+==> 認証
+
+
+$[認証]
+
+==> 証跡保存
+
+
+$[証跡保存]
+
+レスポンス
+==> UserFactory.login
+
+
+$[GET /api/v1/news]
+
+==> ニュース一覧取得
+
+
+$[ニュース一覧取得]
+
+レスポンス
+==> NewsFactory.list
+
+
+$[GET /api/v1/news/:news_id]
+
+==> ニュース詳細取得
+
+
+$[ニュース詳細取得]
+
+レスポンス
+==> NewsFactory.detail
+
+
+$[PUT /api/v1/users/:user_id]
+
+==> アカウント情報更新
+
+
+$[アカウント情報更新]
+
+レスポンス
+==> AccountFactory.update

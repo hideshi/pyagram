@@ -44,8 +44,6 @@ $[GET /edit]
 
 --> List View
 
---> Add View
-
 Click back button
 ==> GET /index
 
@@ -79,8 +77,6 @@ $[Save]
 /edit
 
 --> List View
-
---> Edit View
 
 Click back button
 ==> GET /index
