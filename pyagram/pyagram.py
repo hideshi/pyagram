@@ -5,9 +5,10 @@ from argparse import ArgumentParser
 import os
 import pyparsing as pp
 import hashlib
+import pprint
 
 def lexical_analysis(src):
-    string = pp.Regex('[a-zA-Z0-9_/ ａ-ｚＡ-Ｚぁ-ゔゞァ-・ヽヾ゛゜ー一-龯]+')
+    string = pp.Regex('[a-zA-Z0-9_{}"=+\-*/\.:; ａ-ｚＡ-Ｚぁ-ゔゞァ-・ヽヾ゛゜ー一-龯]+')
 
     blank = pp.LineStart() + pp.LineEnd()
 
@@ -20,24 +21,27 @@ def lexical_analysis(src):
     view_tag = pp.LineStart() + '#'
     view = view_tag + start + string + end
 
-    process_tag = pp.LineStart() + '$'
-    process = process_tag + start + string + end
+    server_process_tag = pp.LineStart() + '$'
+    server_process = server_process_tag + start + string + end
 
-    view_transition_operator = pp.LineStart() + '-->'
-    view_transition = view_transition_operator + string
+    client_process_tag = pp.LineStart() + '%'
+    client_process = client_process_tag + start + string + end
 
-    process_transition_operator = pp.LineStart() + '==>'
-    process_transition = process_transition_operator + string
+    view_transition_identifier = pp.LineStart() + '-->'
+    view_transition = view_transition_identifier + string
 
-    state_machine = pp.OneOrMore(graph | view | process | view_transition | process_transition | string | blank)
+    process_transition_identifier = pp.LineStart() + '==>'
+    process_transition = process_transition_identifier + string
+
+    state_machine = pp.OneOrMore(graph | view | server_process | client_process | view_transition | process_transition | string | blank)
 
     return state_machine.parseString(src)
 
 def syntactic_analysis(src):
     prev = False
-    next_view_count = 0
+    next_views_count = 0
     count = 0
-    d = {'graph': {'title': ''}, 'views': {}, 'processes': {}}
+    d = {'graph': {'title': ''}, 'views': {}, 'server_processes': {}, 'client_processes': {}}
     for elem in src:
         if elem[0] == '@' and elem[1] == '[' and elem[3] == ']':
             d['graph'][elem[2]] = ''
@@ -46,19 +50,30 @@ def syntactic_analysis(src):
         elif elem[0] == '#' and elem[1] == '[' and elem[3] == ']':
             d['views'][elem[2]] = {}
             d['views'][elem[2]]['path'] = ''
-            d['views'][elem[2]]['next_view'] = {}
-            d['views'][elem[2]]['next_processes'] = {}
-            d['views'][elem[2]]['next_processes']['action'] = {}
-            d['views'][elem[2]]['next_processes']['process'] = {}
+            d['views'][elem[2]]['next_views'] = {}
+            d['views'][elem[2]]['next_server_processes'] = {}
+            d['views'][elem[2]]['next_server_processes']['action'] = {}
+            d['views'][elem[2]]['next_server_processes']['process'] = {}
+            d['views'][elem[2]]['next_client_processes'] = {}
+            d['views'][elem[2]]['next_client_processes']['action'] = {}
+            d['views'][elem[2]]['next_client_processes']['process'] = {}
             prev = elem
-            next_view_count = 0
+            next_views_count = 0
             count = 0
 
         elif elem[0] == '$' and elem[1] == '[' and elem[3] == ']':
-            d['processes'][elem[2]] = {}
-            d['processes'][elem[2]]['next_processes'] = {}
-            d['processes'][elem[2]]['next_processes']['action'] = {}
-            d['processes'][elem[2]]['next_processes']['process'] = {}
+            d['server_processes'][elem[2]] = {}
+            d['server_processes'][elem[2]]['next_server_processes'] = {}
+            d['server_processes'][elem[2]]['next_server_processes']['action'] = {}
+            d['server_processes'][elem[2]]['next_server_processes']['process'] = {}
+            prev = elem
+            count = 0
+
+        elif elem[0] == '%' and elem[1] == '[' and elem[3] == ']':
+            d['client_processes'][elem[2]] = {}
+            d['client_processes'][elem[2]]['next_client_processes'] = {}
+            d['client_processes'][elem[2]]['next_client_processes']['action'] = {}
+            d['client_processes'][elem[2]]['next_client_processes']['process'] = {}
             prev = elem
             count = 0
 
@@ -69,21 +84,28 @@ def syntactic_analysis(src):
             d['views'][prev[2]]['path'] = elem[0]
 
         elif prev and prev[0] == '#' and elem[0] == '-->':
-            d['views'][prev[2]]['next_view'][next_view_count] = elem[1].strip()
-            next_view_count = next_view_count + 1
+            d['views'][prev[2]]['next_views'][next_views_count] = elem[1].strip()
+            next_views_count = next_views_count + 1
 
         elif prev and prev[0] == '#' and elem[0] != '==>':
-            d['views'][prev[2]]['next_processes']['action'][count] = elem[0].strip()
+            d['views'][prev[2]]['next_server_processes']['action'][count] = elem[0].strip()
 
         elif prev and prev[0] == '#' and elem[0] == '==>':
-            d['views'][prev[2]]['next_processes']['process'][count] = elem[1].strip()
+            d['views'][prev[2]]['next_server_processes']['process'][count] = elem[1].strip()
             count = count + 1
 
         elif prev and prev[0] == '$' and elem[0] != '==>':
-            d['processes'][prev[2]]['next_processes']['action'][count] = elem[0].strip()
+            d['server_processes'][prev[2]]['next_server_processes']['action'][count] = elem[0].strip()
 
         elif prev and prev[0] == '$' and elem[0] == '==>':
-            d['processes'][prev[2]]['next_processes']['process'][count] = elem[1].strip()
+            d['server_processes'][prev[2]]['next_server_processes']['process'][count] = elem[1].strip()
+            count = count + 1
+
+        elif prev and prev[0] == '%' and elem[0] != '==>':
+            d['client_processes'][prev[2]]['next_client_processes']['action'][count] = elem[0].strip()
+
+        elif prev and prev[0] == '%' and elem[0] == '==>':
+            d['client_processes'][prev[2]]['next_client_processes']['process'][count] = elem[1].strip()
             count = count + 1
 
     return d
@@ -97,19 +119,26 @@ def generate(in_file, image_type, src):
     for key, value in src['views'].items():
         f_out.write('"' + key + '"' + '[peripheries=2,label="' + key + ' ' + value['path'] + '"];')
     for key, value in src['views'].items():
-        if 0 in value['next_view']:
-            f_out.write('"' + key + '"' + '->' + '"' + value['next_view'][0] + '"' + '[style=dashed];')
-    for key, value in src['processes'].items():
+        for key2, value2 in value['next_views'].items():
+            f_out.write('"' + key + '"' + '->' + '"' + value2 + '"' + '[style=dashed];')
+    for key, value in src['server_processes'].items():
         f_out.write('"' + key + '"' + '[style=filled];')
     for key, value in src['views'].items():
         for key2, value2 in value.items():
-            if key2 != 'path' and key2 != 'next_view':
+            if key2 != 'path' and key2 != 'next_views':
                 for key3, value3 in value2['process'].items():
                     if key3 in value2['action']:
                         f_out.write('"' + key + '"' + '->' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];')
                     else:
                         f_out.write('"' + key + '"' + '->' + '"' + value3 + '";')
-    for key, value in src['processes'].items():
+    for key, value in src['server_processes'].items():
+        for key2, value2 in value.items():
+            for key3, value3 in value2['process'].items():
+                if key3 in value2['action']:
+                    f_out.write('"' + key + '"' + '->' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];')
+                else:
+                    f_out.write('"' + key + '"' + '->' + '"' + value3 + '";')
+    for key, value in src['client_processes'].items():
         for key2, value2 in value.items():
             for key3, value3 in value2['process'].items():
                 if key3 in value2['action']:
