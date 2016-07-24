@@ -8,7 +8,7 @@
 --> 記事一覧
 
 ログインボタンをクリック
-==> UserFactory.login
+==> LoginController.login
 
 
 #[記事一覧]
@@ -18,11 +18,14 @@
 
 --> 記事詳細
 
-自動取得
-==> NewsFactory.list
+プルリフレッシュ
+==> NewsController.getLatest
+
+画面スクロール
+==> NewsController.getPast
 
 記事をクリック
-==> NewsDetailController.show
+==> NewsDetailController.init
 
 
 #[記事詳細]
@@ -31,7 +34,7 @@
 --> 記事一覧
 
 お気に入りボタンをクリック
-==> DatabaseFactory.saveFavorite
+==> NewsDetailController.saveFavorite
 
 外部リンクをクリック
 ==> Webブラウザを起動
@@ -43,7 +46,7 @@
 --> アカウント情報
 
 アカウント情報をクリック
-==> DatabaseFactory.getAccount
+==> AccountController.init
 
 
 #[アカウント情報]
@@ -52,56 +55,66 @@
 --> 記事一覧
 
 保存ボタンをクリック
-==> DatabaseFactory.saveUser
+==> AccountController.save
 
 戻るボタンをクリック
 ==> 記事一覧
 
 
-%[UserFactory.login]
+%[LoginController.login]
 
-==> POST /api/v1/users/login
+==> UserFactory.login
 
 {200}認証成功
-==> 記事一覧
+==> NewsController.init
 
 {401}認証失敗
 ==> ログイン
 
 
-%[NewsFactory.list]
+%[NewsController.init]
 
-==> GET /api/v1/news
-
-{200}取得成功
-==> DatabaseFactory.saveNews
-
-{500}サーバエラーのアラート表示
-==> 記事一覧
+==> NewsFactory.list
 
 
-%[DatabaseFactory.saveNews]
+%[NewsController.getLatest]
 
-保存失敗時はアラート表示
-==> 記事一覧
+==> NewsFactory.list
 
 
-%[NewsDetailController.show]
+%[NewsController.getPast]
+
+==> NewsFactory.list
+
+
+%[NewsDetailController.init]
 
 ==> Google Analyticsへアクセスログを送信
 
 ==> NewsFactory.detail
 
 
-%[NewsFactory.detail]
+%[NewsDetailController.saveFavorite]
 
-==> GET /api/v1/news/:news_id
+==> Google Analyticsへアクセスログを送信
 
-{200}取得成功
-==> DatabaseFactory.saveNewsDetail
+==> DatabaseFactory.saveFavorite
 
-{500}サーバエラーのアラート表示
-==> 記事詳細
+
+%[AccountController.init]
+
+==> DatabaseFactory.getAccount
+
+
+%[AccountController.save]
+
+==> DatabaseFactory.saveAccount
+
+
+%[DatabaseFactory.saveNews]
+
+保存失敗時はアラート表示
+==> 記事一覧
 
 
 %[DatabaseFactory.saveNewsDetail]
@@ -122,13 +135,42 @@
 ==> アカウント情報
 
 
-%[DatabaseFactory.saveUser]
+%[DatabaseFactory.saveAccount]
 
 成功かつ通信可能
 ==> AccountFactory.update
 
 保存失敗時はアラート表示
 ==> アカウント情報
+
+
+%[UserFactory.login]
+
+==> POST /api/v1/users/login
+
+==> LoginController.login
+
+
+%[NewsFactory.list]
+
+==> GET /api/v1/news
+
+{200}取得成功
+==> DatabaseFactory.saveNews
+
+{500}サーバエラーのアラート表示
+==> 記事一覧
+
+
+%[NewsFactory.detail]
+
+==> GET /api/v1/news/:news_id
+
+{200}取得成功
+==> DatabaseFactory.saveNewsDetail
+
+{500}サーバエラーのアラート表示
+==> 記事詳細
 
 
 %[AccountFactory.update]
