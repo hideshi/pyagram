@@ -5,6 +5,7 @@ from argparse import ArgumentParser
 import os
 import pyparsing as pp
 import hashlib
+import json
 import pprint
 
 def lexical_analysis(src):
@@ -111,7 +112,7 @@ def syntactic_analysis(src):
     return d
 
 def generate(in_file, image_type, src):
-    dot_file = hashlib.md5().hexdigest()
+    dot_file = hashlib.md5(bytes(json.dumps(src), 'utf-8')).hexdigest()
     out_file = in_file.replace('.txt', '.' + image_type)
     f_out = open(dot_file, 'w')
     f_out.write('digraph sample {')
