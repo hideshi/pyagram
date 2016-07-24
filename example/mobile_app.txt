@@ -54,6 +54,9 @@
 保存ボタンをクリック
 ==> DatabaseFactory.saveUser
 
+戻るボタンをクリック
+==> 記事一覧
+
 
 %[UserFactory.login]
 
