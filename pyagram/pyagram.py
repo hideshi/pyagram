@@ -3,6 +3,7 @@
 import sys
 from argparse import ArgumentParser
 import os
+import os.path
 import pyparsing as pp
 import hashlib
 import json
@@ -111,9 +112,9 @@ def syntactic_analysis(src):
 
     return d
 
-def generate(in_file, image_type, src):
+def generate(in_file, out_path, image_type, src):
     dot_file = hashlib.md5(bytes(json.dumps(src), 'utf-8')).hexdigest()
-    out_file = in_file.replace('.txt', '.' + image_type)
+    out_file = os.path.basename(in_file.replace('.txt', '.' + image_type))
     f_out = open(dot_file, 'w')
     f_out.write('digraph sample {')
     f_out.write('graph [label="' + src['graph']['title'] + '",labelloc=t,fontsize=18];')
@@ -149,13 +150,13 @@ def generate(in_file, image_type, src):
     f_out.write('}')
     f_out.flush()
 
-    command1 = 'dot -T' + image_type + ' -o ' + out_file + ' ' + dot_file
+    command1 = 'dot -T' + image_type + ' -o ' + out_path + '/' + out_file + ' ' + dot_file
     os.system(command1)
 
     command2 = 'rm -f ' + dot_file
     os.system(command2)
 
-def compile(in_file, image_type):
+def compile(in_file, out_path, image_type):
     f_in = open(in_file, 'r')
     lines = []
     for line in f_in.readlines():
@@ -164,16 +165,19 @@ def compile(in_file, image_type):
             result1 = lexical_analysis(replaced_line)
             lines.append(result1)
     result2 = syntactic_analysis(lines)
-    generate(in_file, image_type, result2)
+    generate(in_file, out_path, image_type, result2)
 
 def main():
     parser = ArgumentParser(description='Pyagram: Diagram generator')
-    parser.add_argument('-f', '--input', help='Input filename')
+    parser.add_argument('-i', '--input', help='Input filename')
+    parser.add_argument('-o', '--outpath', help='Output file path', default='.')
     parser.add_argument('-t', '--imagetype', help='Output image type')
     _args = parser.parse_args()
     if not _args.imagetype in ['gif', 'png', 'svg']:
         raise ValueError('Output image type must be gif, png or svg.')
-    compile(_args.input, _args.imagetype)
+    if not os.path.exists(_args.outpath):
+        raise ValueError('Output file path must exist.')
+    compile(_args.input, _args.outpath, _args.imagetype)
 
 if __name__ == '__main__':
     main()
