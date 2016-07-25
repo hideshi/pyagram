@@ -6,7 +6,7 @@ def read(fname):
 
 setup(
     name = 'pyagram',
-    version = '1.2.0',
+    version = '1.2.1',
     description = 'Pyagram: Python Finite State Machine Diagram Generator',
     license = 'MIT License',
     author = 'Hideshi Ogoshi',
@@ -168,14 +168,16 @@ How to execute
 
 pyagram command accepts 2 kinds of options.  
 
-T option represents image type, which accepts gif, png and svg.  
+t option represents image type, which accepts gif, png and svg.  
 
-I option represents source file, which accepts text file.  
+o option represents output path, which accepts path.  
+
+i option represents source file, which accepts text file.  
 
 Output file is placed in the same place as the source file.  
 
 
-    pyagram -t {image type} -f {source file}
+    pyagram -t {image type} -o output path{} -i {source file}
 
     
     ''',
