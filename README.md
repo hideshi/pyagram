@@ -147,5 +147,5 @@ i option represents source file, which accepts text file.
 Output file is placed in the same place as the source file.  
 
 
-    pyagram -t {image type} -o output path{} -i {source file}
+    pyagram -t {image type} -o {output path} -i {source file}
 
