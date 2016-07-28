@@ -152,12 +152,12 @@ def generate(in_file, out_path, image_type, src, fontname=None):
                     f_out.write('"' + key + '"' + '->' + '"' + value3 + '";')
     f_out.write('}')
     f_out.flush()
+    f_out.close()
 
     command1 = 'dot -T' + image_type + ' -o ' + out_path + '/' + out_file + ' ' + dot_file
     os.system(command1)
 
-    command2 = 'rm -f ' + dot_file
-    os.system(command2)
+    os.remove(dot_file)
 
 def compile(in_file, out_path, image_type, fontname=None):
     f_in = open(in_file, 'r', encoding='utf-8')
