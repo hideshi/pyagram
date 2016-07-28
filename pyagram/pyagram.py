@@ -112,12 +112,15 @@ def syntactic_analysis(src):
 
     return d
 
-def generate(in_file, out_path, image_type, src):
+def generate(in_file, out_path, image_type, src, fontname=None):
     dot_file = hashlib.md5(bytes(json.dumps(src), 'utf-8')).hexdigest()
     out_file = os.path.basename(in_file.replace('.txt', '.' + image_type))
     f_out = open(dot_file, 'w')
     f_out.write('digraph sample {')
-    f_out.write('graph [label="' + src['graph']['title'] + '",labelloc=t,fontsize=18];')
+    fontsetting = "fontname=\"" + fontname + "\"" if fontname else ""
+    f_out.write('graph [label="' + src['graph']['title'] + '",labelloc=t,fontsize=18,' + fontsetting + '];')
+    f_out.write('node ['+fontsetting+'];')
+    f_out.write('edge ['+fontsetting+'];')
     for key, value in src['views'].items():
         f_out.write('"' + key + '"' + '[peripheries=2,label="' + key + ' ' + value['path'] + '"];')
     for key, value in src['views'].items():
@@ -156,7 +159,7 @@ def generate(in_file, out_path, image_type, src):
     command2 = 'rm -f ' + dot_file
     os.system(command2)
 
-def compile(in_file, out_path, image_type):
+def compile(in_file, out_path, image_type, fontname=None):
     f_in = open(in_file, 'r')
     lines = []
     for line in f_in.readlines():
@@ -165,19 +168,20 @@ def compile(in_file, out_path, image_type):
             result1 = lexical_analysis(replaced_line)
             lines.append(result1)
     result2 = syntactic_analysis(lines)
-    generate(in_file, out_path, image_type, result2)
+    generate(in_file, out_path, image_type, result2, fontname=fontname)
 
 def main():
     parser = ArgumentParser(description='Pyagram: Diagram generator')
     parser.add_argument('-i', '--input', help='Input filename')
     parser.add_argument('-o', '--outpath', help='Output file path', default='.')
     parser.add_argument('-t', '--imagetype', help='Output image type')
+    parser.add_argument('-f', '--font', help='Fontname for labels')
     _args = parser.parse_args()
     if not _args.imagetype in ['gif', 'png', 'svg']:
         raise ValueError('Output image type must be gif, png or svg.')
     if not os.path.exists(_args.outpath):
         raise ValueError('Output file path must exist.')
-    compile(_args.input, _args.outpath, _args.imagetype)
+    compile(_args.input, _args.outpath, _args.imagetype, fontname=_args.font)
 
 if __name__ == '__main__':
     main()
