@@ -115,7 +115,7 @@ def syntactic_analysis(src):
 def generate(in_file, out_path, image_type, src, fontname=None):
     dot_file = hashlib.md5(bytes(json.dumps(src), 'utf-8')).hexdigest()
     out_file = os.path.basename(in_file.replace('.txt', '.' + image_type))
-    f_out = open(dot_file, 'w')
+    f_out = open(dot_file, 'w', encoding='utf-8')
     f_out.write('digraph sample {')
     fontsetting = "fontname=\"" + fontname + "\"" if fontname else ""
     f_out.write('graph [label="' + src['graph']['title'] + '",labelloc=t,fontsize=18,' + fontsetting + '];')
@@ -160,7 +160,7 @@ def generate(in_file, out_path, image_type, src, fontname=None):
     os.system(command2)
 
 def compile(in_file, out_path, image_type, fontname=None):
-    f_in = open(in_file, 'r')
+    f_in = open(in_file, 'r', encoding='utf-8')
     lines = []
     for line in f_in.readlines():
         replaced_line = str(line.replace('\n',''))
