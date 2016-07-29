@@ -10,7 +10,7 @@ import json
 import pprint
 
 def lexical_analysis(src):
-    string = pp.Regex('[a-zA-Z0-9_{}"=+\-*/\.:; ａ-ｚＡ-Ｚぁ-ゔゞァ-・ヽヾ゛゜ー一-龯]+')
+    string = pp.Regex('[a-zA-Z0-9_{}"=+\-*/\.:;&%@$#<>? ａ-ｚＡ-Ｚぁ-ゔゞァ-・ヽヾ゛゜ー一-龯]+')
 
     blank = pp.LineStart() + pp.LineEnd()
 
