@@ -1,9 +1,8 @@
 import os
 import os.path
-import pyparsing as pp
 import hashlib
 import json
-import pprint
+import pprint as p
 
 class Diagram(object):
     def __init__(self, in_file, out_path, image_type, process_line_by_line, fontname = None):
@@ -35,18 +34,17 @@ class Diagram(object):
         os.remove(dot_file)
 
     def compile(self):
-        pprint.pprint(self.in_file)
         f_in = open(self.in_file, 'r', encoding = 'utf-8')
         if self.process_line_by_line:
             parsed_lines = []
             for line in f_in.readlines():
                 replaced_line = str(line.replace('\n',''))
                 if len(replaced_line) != 0:
-                    parsed_line = lexical_analysis(replaced_line)
+                    parsed_line = self.lexical_analysis(replaced_line)
                     parsed_lines.append(parsed_line)
         else:
             lines = f_in.readlines()
-            parsed_lines = lexical_analysis(lines)
-        ast = syntactic_analysis(parsed_lines)
-        dot = generate_dot(ast)
-        generate_image(dot)
+            parsed_lines = self.lexical_analysis(lines)
+        ast = self.syntactic_analysis(parsed_lines)
+        dot = self.generate_dot(ast)
+        self.generate_image(dot)

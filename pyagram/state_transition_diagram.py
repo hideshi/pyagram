@@ -1,7 +1,10 @@
+import pyparsing as pp
+import pprint as p
 from diagram import Diagram
-class FiniteStateMachineDiagram(Diagram):
+
+class StateTransitionDiagram(Diagram):
     def lexical_analysis(self, src):
-        string = pp.Regex('[a-zA-Z0-9_{}"=+\-*/\.:; ａ-ｚＡ-Ｚぁ-ゔゞァ-・ヽヾ゛゜ー一-龯]+')
+        string = pp.Regex('[a-zA-Z0-9_{}"=+\-*/\.:;&%@$#<>? ａ-ｚＡ-Ｚぁ-ゔゞァ-・ヽヾ゛゜ー一-龯]+')
     
         blank = pp.LineStart() + pp.LineEnd()
     
@@ -103,40 +106,40 @@ class FiniteStateMachineDiagram(Diagram):
     
         return d
 
-    def generate_dot(self, ast):
-        f_out = open(dot_file, 'w', encoding='utf-8')
-        f_out.write('digraph sample {')
-        fontsetting = "fontname=\"" + self.fontname + "\"" if self.fontname else ""
-        f_out.write('graph [label="' + src['graph']['title'] + '",labelloc=t,fontsize=18,' + fontsetting + '];')
-        f_out.write('node ['+fontsetting+'];')
-        f_out.write('edge ['+fontsetting+'];')
+    def generate_dot(self, src):
+        dot = 'digraph sample {'
+        fontsetting = 'fontname="' + self.fontname + '"' if self.fontname else ''
+        dot = dot + 'graph [label="' + src['graph']['title'] + '",labelloc=t,fontsize=18,' + fontsetting + '];'
+        dot = dot + 'node ['+fontsetting+'];'
+        dot = dot + 'edge ['+fontsetting+'];'
         for key, value in src['views'].items():
-            f_out.write('"' + key + '"' + '[peripheries=2,label="' + key + ' ' + value['path'] + '"];')
+            dot = dot + '"' + key + '"' + '[peripheries=2,label="' + key + ' ' + value['path'] + '"];'
         for key, value in src['views'].items():
             for key2, value2 in value['next_views'].items():
-                f_out.write('"' + key + '"' + '->' + '"' + value2 + '"' + '[style=dashed];')
+                dot = dot + '"' + key + '"' + '->' + '"' + value2 + '"' + '[style=dashed];'
         for key, value in src['server_processes'].items():
-            f_out.write('"' + key + '"' + '[style=filled];')
+            dot = dot + '"' + key + '"' + '[style=filled];'
         for key, value in src['views'].items():
             for key2, value2 in value.items():
                 if key2 != 'path' and key2 != 'next_views':
                     for key3, value3 in value2['process'].items():
                         if key3 in value2['action']:
-                            f_out.write('"' + key + '"' + '->' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];')
+                            dot = dot + '"' + key + '"' + '->' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];'
                         else:
-                            f_out.write('"' + key + '"' + '->' + '"' + value3 + '";')
+                            dot = dot + '"' + key + '"' + '->' + '"' + value3 + '";'
         for key, value in src['server_processes'].items():
             for key2, value2 in value.items():
                 for key3, value3 in value2['process'].items():
                     if key3 in value2['action']:
-                        f_out.write('"' + key + '"' + '->' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];')
+                        dot = dot + '"' + key + '"' + '->' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];'
                     else:
-                        f_out.write('"' + key + '"' + '->' + '"' + value3 + '";')
+                        dot = dot + '"' + key + '"' + '->' + '"' + value3 + '";'
         for key, value in src['client_processes'].items():
             for key2, value2 in value.items():
                 for key3, value3 in value2['process'].items():
                     if key3 in value2['action']:
-                        f_out.write('"' + key + '"' + '->' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];')
+                        dot = dot + '"' + key + '"' + '->' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];'
                     else:
-                        f_out.write('"' + key + '"' + '->' + '"' + value3 + '";')
-        f_out.write('}')
+                        dot = dot + '"' + key + '"' + '->' + '"' + value3 + '";'
+        dot = dot + '}'
+        return dot
