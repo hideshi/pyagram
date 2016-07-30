@@ -23,7 +23,7 @@ class Diagram(object):
 
     def generate_image(self, dot):
         dot_file = hashlib.md5(bytes(json.dumps(dot), 'utf-8')).hexdigest()
-        out_file = os.path.basename(self.in_file.replace('.txt', '.' + self.image_type))
+        out_file = os.path.basename(os.path.splitext(self.in_file)[0]) + '.' + self.image_type
         f_out = open(dot_file, 'w', encoding='utf-8')
         f_out.write(dot)
         f_out.flush()
