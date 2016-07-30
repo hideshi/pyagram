@@ -1,0 +1,14 @@
+CREATE TABLE employees (
+    id int(11) AUTO_INCREMENT,
+    name varchar(100) NOT NULL,
+    birthday date,
+    hired_date date NOT NULL,
+    department_id int(11),
+    PRIMARY KEY('id')
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE departments (
+    id int(11) AUTO_INCREMENT,
+    name varchar(100) NOT NULL,
+    PRIMARY KEY('id')
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;

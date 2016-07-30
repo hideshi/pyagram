@@ -1,0 +1,6 @@
+digraph erd{
+    node[shape=record];
+    employees[label="{employees|id|name|birthday|hired_date|<department_id>department_id}"];
+    departments[label="{departments|<id>id|name}"];
+    departments:id->employees:department_id[dir=none];
+}
