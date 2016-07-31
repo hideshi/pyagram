@@ -19,10 +19,10 @@ def main():
     if not os.path.exists(_args.outpath):
         raise ValueError('Output file path must exist.')
     if _args.diagram == 'std':
-        from state_transition_diagram import StateTransitionDiagram as Diagram
+        from pyagram.state_transition_diagram import StateTransitionDiagram as Diagram
         process_line_by_line = True
     elif _args.diagram == 'erd':
-        from entity_relationship_diagram import EntityRelationshipDiagram as Diagram
+        from pyagram.entity_relationship_diagram import EntityRelationshipDiagram as Diagram
         process_line_by_line = False
     diagram = Diagram(_args.input, _args.outpath, _args.imagetype, process_line_by_line, _args.font)
     diagram.compile()

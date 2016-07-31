@@ -2,7 +2,7 @@ import pyparsing as pp
 import re
 import inflect
 import pprint as p
-from diagram import Diagram
+from pyagram.diagram import Diagram
 
 class EntityRelationshipDiagram(Diagram):
     def lexical_analysis(self, src):

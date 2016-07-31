@@ -1,6 +1,6 @@
 import pyparsing as pp
 import pprint as p
-from diagram import Diagram
+from pyagram.diagram import Diagram
 
 class StateTransitionDiagram(Diagram):
     def lexical_analysis(self, src):
