@@ -43,7 +43,7 @@ class Diagram(object):
                     parsed_line = self.lexical_analysis(replaced_line)
                     parsed_lines.append(parsed_line)
         else:
-            lines = f_in.readlines()
+            lines = f_in.read()
             parsed_lines = self.lexical_analysis(lines)
         ast = self.syntactic_analysis(parsed_lines)
         dot = self.generate_dot(ast)

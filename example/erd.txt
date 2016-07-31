@@ -1,14 +1,40 @@
 CREATE TABLE employees (
-    id int(11) AUTO_INCREMENT,
-    name varchar(100) NOT NULL,
-    birthday date,
-    hired_date date NOT NULL,
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    birth_date DATE NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    gender INT(11) NOT NULL,
+    hire_date DATE NOT NULL,
     department_id int(11),
     PRIMARY KEY('id')
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE departments (
-    id int(11) AUTO_INCREMENT,
-    name varchar(100) NOT NULL,
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
     PRIMARY KEY('id')
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE titles (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    PRIMARY KEY('id')
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE employee_title (
+    employee_id INT(11) NOT NULL,
+    title_id INT(11) NOT NULL,
+    from_date DATE NOT NULL,
+    to_date DATE NOT NULL,
+    PRIMARY KEY('employee_id', 'title_id')
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE salaries (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    employee_id INT(11) NOT NULL,
+    salary INT(11) NOT NULL,
+    from_date DATE NOT NULL,
+    to_date DATE NOT NULL,
+    PRIMARY KEY('id'),
+    KEY('employee_id')
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
