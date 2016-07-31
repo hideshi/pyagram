@@ -15,7 +15,7 @@ def main():
     if not _args.imagetype in ['gif', 'png', 'svg']:
         raise ValueError('Output image type must be gif, png or svg.')
     if not _args.diagram in ['std', 'erd']:
-        raise ValueError('Diagram type must be std (State Transition Diagram) or erd(Entity Relationship Diagram).')
+        raise ValueError('Diagram type must be std(State Transition Diagram) or erd(Entity Relationship Diagram).')
     if not os.path.exists(_args.outpath):
         raise ValueError('Output file path must exist.')
     if _args.diagram == 'std':

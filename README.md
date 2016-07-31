@@ -140,7 +140,7 @@ pyagram command accepts 2 kinds of options.
 
 t option represents image type, which accepts gif, png and svg.  
 
-d option represents diagram type, which accepts stm and erd.  
+d option represents diagram type, which accepts std and erd.  
 
 f option represents font name, which accepts font names in your operation system if it exists or uses default font.  
 

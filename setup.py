@@ -7,7 +7,7 @@ def read(fname):
 setup(
     name = 'pyagram',
     version = '1.4.0',
-    description = 'Pyagram: Python Finite State Machine Diagram Generator',
+    description = 'Pyagram: Diagram Generator',
     license = 'MIT License',
     author = 'Hideshi Ogoshi',
     author_email = 'hideshi.ogoshi@gmail.com',
@@ -16,6 +16,7 @@ setup(
     packages = ['pyagram'],
     install_requires = [
         'pyparsing',
+        'inflect',
     ],
     entry_points = {
         'console_scripts': ['pyagram = pyagram.pyagram:main']
@@ -37,7 +38,7 @@ setup(
 Pyagram
 =======
 
-Python Finite State Machine Diagram Generator  
+Diagram Generator  
 
 This is a command line tool, which generates finite state machine diagram for web and mobile application development from a source file through graphviz.  
 
@@ -171,7 +172,7 @@ pyagram command accepts 2 kinds of options.
 
 t option represents image type, which accepts gif, png and svg.  
 
-d option represents diagram type, which accepts stm and erd.  
+d option represents diagram type, which accepts std and erd.  
 
 f option represents font name, which accepts font names in your operation system if it exists or uses default font.  
 
