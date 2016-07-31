@@ -6,7 +6,7 @@ def read(fname):
 
 setup(
     name = 'pyagram',
-    version = '1.3.1',
+    version = '1.4.0',
     description = 'Pyagram: Python Finite State Machine Diagram Generator',
     license = 'MIT License',
     author = 'Hideshi Ogoshi',
@@ -171,6 +171,8 @@ pyagram command accepts 2 kinds of options.
 
 t option represents image type, which accepts gif, png and svg.  
 
+d option represents diagram type, which accepts stm and erd.  
+
 f option represents font name, which accepts font names in your operation system if it exists or uses default font.  
 
 o option represents output path, which accepts path.  
@@ -180,7 +182,7 @@ i option represents source file, which accepts text file.
 Output file is placed in the same place as the source file.  
 
 
-    pyagram -t {image type} -f {font name} -o {output path} -i {source file}
+    pyagram -t {image type} -d {diagram type} -f {font name} -o {output path} -i {source file}
 
     
     ''',
