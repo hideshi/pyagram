@@ -6,7 +6,7 @@ def read(fname):
 
 setup(
     name = 'pyagram',
-    version = '1.4.1',
+    version = '1.4.2',
     description = 'Pyagram: Diagram Generator',
     license = 'MIT License',
     author = 'Hideshi Ogoshi',
