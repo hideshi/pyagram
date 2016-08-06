@@ -148,6 +148,8 @@ o option represents output path, which accepts path.
 
 i option represents source file, which accepts text file.  
 
+v option represents verbose mode, which prints various information useful for debugging.
+
 Output file is placed in the same place as the source file.  
 
 

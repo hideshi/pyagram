@@ -59,21 +59,21 @@ class EntityRelationshipDiagram(Diagram):
         return result
 
     def generate_dot(self, src):
-        dot = 'digraph erd{node[shape=record];'
+        dot = 'digraph erd{\n\tnode [shape=record];\n'
         fontsetting = 'fontname="' + self.fontname + '"' if self.fontname else ''
         node_prop = ', '.join(filter(None, [fontsetting, 'style="rounded"']))
-        dot += 'node [' + node_prop + '];'
-        dot += 'edge [' + fontsetting + '];'
+        dot += '\tnode [' + node_prop + '];\n'
+        dot += '\tedge [' + fontsetting + '];\n'
         for table in src['src']:
             for k, v in table.items():
                 if k == 'table_name':
-                   dot += v + '[label="{[' + v + ']|'
+                   dot += '\t' + v + ' [label="{[' + v + ']|'
             for e in table:
                if 'column_name' in e:
-                    dot += '<' + e['column_name'] + '>' + e['column_name'] + '|'
+                    dot += '\t<' + e['column_name'] + '>' + e['column_name'] + '|'
             dot = dot[0:-1]
-            dot += '}"];'
+            dot += '}"];\n'
         for k, v in src['relations'].items():
-            dot += k + '->' + v + '[dir=none];'
+            dot += '\t' + k + ' -> ' + v + ' [dir=none];\n'
         dot += '}'
         return dot

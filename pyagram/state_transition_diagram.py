@@ -107,39 +107,39 @@ class StateTransitionDiagram(Diagram):
         return d
 
     def generate_dot(self, src):
-        dot = 'digraph sample {'
+        dot = 'digraph sample {\n'
         fontsetting = 'fontname="' + self.fontname + '"' if self.fontname else ''
-        dot = dot + 'graph [label="' + src['graph']['title'] + '",labelloc=t,fontsize=18,' + fontsetting + '];'
-        dot = dot + 'node ['+fontsetting+'];'
-        dot = dot + 'edge ['+fontsetting+'];'
+        dot = dot + '\tgraph [label="' + src['graph']['title'] + '", labelloc=t, fontsize=18, ' + fontsetting + '];\n'
+        dot = dot + '\tnode ['+fontsetting+'];\n'
+        dot = dot + '\tedge ['+fontsetting+'];\n'
         for key, value in src['views'].items():
-            dot = dot + '"' + key + '"' + '[peripheries=2,label="' + key + ' ' + value['path'] + '"];'
+            dot = dot + '\t"' + key + '" ' + '[peripheries=2, label="' + key + ' ' + value['path'] + '"];\n'
         for key, value in src['views'].items():
             for key2, value2 in value['next_views'].items():
-                dot = dot + '"' + key + '"' + '->' + '"' + value2 + '"' + '[style=dashed];'
+                dot = dot + '\t"' + key + '" ' + ' -> ' + '"' + value2 + '"' + '[style=dashed];\n'
         for key, value in src['server_processes'].items():
-            dot = dot + '"' + key + '"' + '[style=filled];'
+            dot = dot + '\t"' + key + '" ' + '[style=filled];\n'
         for key, value in src['views'].items():
             for key2, value2 in value.items():
                 if key2 != 'path' and key2 != 'next_views':
                     for key3, value3 in value2['process'].items():
                         if key3 in value2['action']:
-                            dot = dot + '"' + key + '"' + '->' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];'
+                            dot = dot + '\t"' + key + '"' + ' -> ' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];\n'
                         else:
-                            dot = dot + '"' + key + '"' + '->' + '"' + value3 + '";'
+                            dot = dot + '\t"' + key + '"' + ' -> ' + '"' + value3 + '";\n'
         for key, value in src['server_processes'].items():
             for key2, value2 in value.items():
                 for key3, value3 in value2['process'].items():
                     if key3 in value2['action']:
-                        dot = dot + '"' + key + '"' + '->' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];'
+                        dot = dot + '\t"' + key + '"' + ' -> ' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];\n'
                     else:
-                        dot = dot + '"' + key + '"' + '->' + '"' + value3 + '";'
+                        dot = dot + '\t"' + key + '"' + ' -> ' + '"' + value3 + '";\n'
         for key, value in src['client_processes'].items():
             for key2, value2 in value.items():
                 for key3, value3 in value2['process'].items():
                     if key3 in value2['action']:
-                        dot = dot + '"' + key + '"' + '->' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];'
+                        dot = dot + '"' + key + '"' + ' -> ' + '"' + value3 + '"' + '[label="' + value2['action'][key3] + '"];\n'
                     else:
-                        dot = dot + '"' + key + '"' + '->' + '"' + value3 + '";'
+                        dot = dot + '"' + key + '"' + ' -> ' + '"' + value3 + '";'
         dot = dot + '}'
         return dot
